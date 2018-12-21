@@ -19,15 +19,15 @@ export default {
   methods: {
     login () {
       this.$axios
-        .post('http://gateway.prophet-ee-dev.devops.4pd.io/keystone/v1/sessions', {
+        .post('/login', {
           password: this.password,
-          username: this.username
+          name: this.username
         })
         .then(successResponse => {
           this.$router.push({
             name: 'prophet',
             params: {
-              username: successResponse.data.data.username
+              username: successResponse.data.data.name
             }
           })
         })
