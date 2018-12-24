@@ -1,15 +1,5 @@
 <template>
   <div id="pws">
-    <el-dropdown @command="handleCommand">
-      <span class="el-dropdown-link">
-       下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
-      </span>
-      <el-dropdown-menu slot="dropdown" v-model="product2">
-        <el-dropdown-item command="prophet">prophet</el-dropdown-item>
-        <el-dropdown-item command="PAS" value="PAS">PAS</el-dropdown-item>
-        <el-dropdown-item command="PWS">PWS</el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown><br/>
     <label class="lable" >产品：</label><el-select v-model="product" placeholder="请选择" v-bind:style="{width: '1000px'}">
       <el-option
         v-for="item in options"
@@ -51,6 +41,19 @@ export default {
       ta: false,
       bu: false
     }
+  },
+  beforeCreate: function () {
+    this.$axios
+      .get('/judgeSession', {
+      })
+      .then(successResponse => {
+      })
+      .catch(failResponse => {
+        this.$router.push({
+          path: '/'
+        })
+        alert('重新登录')
+      })
   },
   // 观察select的变化，select的v-model="product"
   watch: {
@@ -101,7 +104,12 @@ export default {
           this.ta = true
           this.responseResult = successResponse.data
         })
-        .catch(failResponse => {})
+        .catch(failResponse => {
+          alert('请重新登录')
+          this.$router.push({
+            path: '/'
+          })
+        })
     }
   }
 }
