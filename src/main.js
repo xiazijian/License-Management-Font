@@ -6,6 +6,7 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 var axios = require('axios')
+// 打包的时候注释下一行
 axios.defaults.baseURL = 'http://localhost:8081/'
 // 携带cookie
 axios.defaults.withCredentials = true

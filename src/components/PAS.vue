@@ -45,7 +45,7 @@ export default {
   },
   beforeCreate: function () {
     this.$axios
-      .get('/judgeSession', {
+      .get('api/judgeSession', {
       })
       .then(successResponse => {
       })
@@ -97,7 +97,7 @@ export default {
     },
     generate () {
       this.$axios
-        .post('/generate', {
+        .post('api/generate', {
           username: this.$route.params.username,
           product: this.product,
           machineCode: this.machineCode,

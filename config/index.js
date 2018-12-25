@@ -10,6 +10,7 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
+    // 后台如果配置了允许跨域，下面其实可以不用写
     proxyTable: {
       '/api': {
         target: 'http://localhost:8081',

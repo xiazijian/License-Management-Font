@@ -19,7 +19,7 @@ export default {
   methods: {
     login () {
       this.$axios
-        .post('/login', {
+        .post('api/login', {
           password: this.password,
           name: this.username
         })

@@ -14,17 +14,17 @@ export default new Router({
       component: Login
     },
     {
-      path: '/pws',
+      path: '/api/pws',
       name: 'pws',
       component: PWS
     },
     {
-      path: '/pas',
+      path: '/api/pas',
       name: 'pas',
       component: PAS
     },
     {
-      path: '/prophet',
+      path: '/api/prophet',
       name: 'prophet',
       component: Prophet
     }
