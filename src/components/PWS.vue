@@ -105,10 +105,7 @@ export default {
           this.responseResult = successResponse.data
         })
         .catch(failResponse => {
-          alert('请重新登录')
-          this.$router.push({
-            path: '/'
-          })
+          alert('信息格式有误')
         })
     }
   }
