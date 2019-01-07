@@ -1,6 +1,8 @@
 <template>
   <div id="prophet">
-    <label class="lable" >产品：</label><el-select v-model="product" placeholder="请选择" v-bind:style="{width: '1000px'}">
+<el-tabs v-model="activeName"  @tab-click="handleClick">
+    <el-tab-pane label="Licene" name="first">
+      <label class="lable" >产品：</label><el-select v-model="product" placeholder="请选择" v-bind:style="{width: '1000px'}">
       <el-option
         v-for="item in options"
         :key="item.value"
@@ -18,6 +20,10 @@
     <el-button type="primary" round size="small" v-on:click="generate">生成</el-button>
     <el-button type="primary" round size="small" v-show="bu" v-on:click="download">下载</el-button><br/>
     <textarea cols="30" rows="10" v-model="responseResult" v-show="ta"></textarea><br/>
+    </el-tab-pane>
+    <el-tab-pane label="申请情况" name="second">配置管理</el-tab-pane>
+  </el-tabs>
+
   </div>
 </template>
 
@@ -39,7 +45,8 @@ export default {
         label: 'PWS'
       }],
       product: 'prophet',
-      ta: false
+      ta: false,
+      activeName: 'first'
     }
   },
   beforeCreate: function () {

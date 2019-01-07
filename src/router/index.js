@@ -4,6 +4,7 @@ import PWS from '@/components/PWS'
 import PAS from '@/components/PAS'
 import Prophet from '@/components/prophet'
 import Login from '@/components/login'
+import Admin from '@/components/Admin'
 Vue.use(Router)
 
 export default new Router({
@@ -27,6 +28,11 @@ export default new Router({
       path: '/api/prophet',
       name: 'prophet',
       component: Prophet
+    },
+    {
+      path: '/api/admin',
+      name: 'admin',
+      component: Admin
     }
   ]
 })
