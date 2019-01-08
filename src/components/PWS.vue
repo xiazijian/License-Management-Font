@@ -66,18 +66,12 @@ export default {
     product (newVal, oldVal) {
       if (newVal === 'prophet') {
         this.$router.push({
-          name: 'prophet',
-          params: {
-            username: this.$route.params.username
-          }
+          name: 'prophet'
         })
       }
       if (newVal === 'PAS') {
         this.$router.push({
-          name: 'pas',
-          params: {
-            username: this.$route.params.username
-          }
+          name: 'pas'
         })
       }
     }
@@ -96,7 +90,7 @@ export default {
     generate () {
       this.$axios
         .post('api/generate', {
-          username: this.$route.params.username,
+          username: localStorage.getItem('username'),
           product: this.product,
           machineCode: this.machineCode,
           versionsSupported: this.versionsSupported,

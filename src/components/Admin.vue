@@ -60,27 +60,27 @@ export default {
   },
   beforeCreate: function () {
     this.$axios
-      .get('api/judgeSession', {
+      .get('api/judgeAdminSession', {
       })
       .then(successResponse => {
+        this.$axios
+          .get('api/listRecord', {
+          })
+          .then(successResponse => {
+            var array = successResponse.data
+            // array.forEach(v => {
+            //   console.log(v.id)
+            // })
+            this.tableData = array
+          })
+          .catch(failResponse => {})
       })
       .catch(failResponse => {
         this.$router.push({
           path: '/'
         })
-        alert('重新登录')
+        alert('使用管理员账号重新登录')
       })
-    this.$axios
-      .get('api/listRecord', {
-      })
-      .then(successResponse => {
-        var array = successResponse.data
-        // array.forEach(v => {
-        //   console.log(v.id)
-        // })
-        this.tableData = array
-      })
-      .catch(failResponse => {})
   }
 }
 </script>

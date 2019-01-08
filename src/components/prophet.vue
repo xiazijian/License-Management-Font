@@ -21,7 +21,54 @@
     <el-button type="primary" round size="small" v-show="bu" v-on:click="download">下载</el-button><br/>
     <textarea cols="30" rows="10" v-model="responseResult" v-show="ta"></textarea><br/>
     </el-tab-pane>
-    <el-tab-pane label="申请情况" name="second">配置管理</el-tab-pane>
+    <el-tab-pane label="申请中" name="second">
+      <el-table
+      :data="tableData"
+      border
+      style="width: 100%">
+      <el-table-column
+        prop="name"
+        label="姓名"
+        width="200">
+      </el-table-column>
+      <el-table-column
+        prop="configuration"
+        label="配置">
+      </el-table-column>
+    </el-table>
+    </el-tab-pane>
+    <el-tab-pane label="申请成功" name="third">
+      <el-table
+      :data="tableData1"
+      border
+      style="width: 100%">
+      <el-table-column
+        prop="name"
+        label="姓名"
+        width="200">
+      </el-table-column>
+      <el-table-column
+        prop="configuration"
+        label="配置">
+      </el-table-column>
+    </el-table>
+    </el-tab-pane>
+    <el-tab-pane label="申请失败" name="fourth">
+      <el-table
+      :data="tableData2"
+      border
+      style="width: 100%">
+      <el-table-column
+        prop="name"
+        label="姓名"
+        width="200">
+      </el-table-column>
+      <el-table-column
+        prop="configuration"
+        label="配置">
+      </el-table-column>
+    </el-table>
+    </el-tab-pane>
   </el-tabs>
 
   </div>
@@ -54,6 +101,39 @@ export default {
       .get('api/judgeSession', {
       })
       .then(successResponse => {
+        this.$axios
+          .get('api/userListRecord?name=' + localStorage.getItem('username'), {
+          })
+          .then(successResponse => {
+            var array = successResponse.data
+            // array.forEach(v => {
+            //   console.log(v.id)
+            // })
+            this.tableData = array
+          })
+          .catch(failResponse => {})
+        this.$axios
+          .get('api/userListPassRecord?name=' + localStorage.getItem('username'), {
+          })
+          .then(successResponse => {
+            var array = successResponse.data
+            // array.forEach(v => {
+            //   console.log(v.id)
+            // })
+            this.tableData1 = array
+          })
+          .catch(failResponse => {})
+        this.$axios
+          .get('api/userListRefudeRecord?name=' + localStorage.getItem('username'), {
+          })
+          .then(successResponse => {
+            var array = successResponse.data
+            // array.forEach(v => {
+            //   console.log(v.id)
+            // })
+            this.tableData2 = array
+          })
+          .catch(failResponse => {})
       })
       .catch(failResponse => {
         this.$router.push({
@@ -67,18 +147,12 @@ export default {
     product (newVal, oldVal) {
       if (newVal === 'PWS') {
         this.$router.push({
-          name: 'pws',
-          params: {
-            username: this.$route.params.username
-          }
+          name: 'pws'
         })
       }
       if (newVal === 'PAS') {
         this.$router.push({
-          name: 'pas',
-          params: {
-            username: this.$route.params.username
-          }
+          name: 'pas'
         })
       }
     }
@@ -97,7 +171,7 @@ export default {
     generate () {
       this.$axios
         .post('api/generate', {
-          username: this.$route.params.username,
+          username: localStorage.getItem('username'),
           product: this.product,
           machineCode: this.machineCode,
           versionsSupported: this.versionsSupported,
@@ -108,9 +182,21 @@ export default {
           maxTenantCount: this.maxTenantCount
         })
         .then(successResponse => {
+          this.$message('申请提交成功')
           this.bu = true
           this.ta = true
           this.responseResult = successResponse.data
+          this.$axios
+            .get('api/userListRecord?name=' + localStorage.getItem('username'), {
+            })
+            .then(successResponse => {
+              var array = successResponse.data
+              // array.forEach(v => {
+              //   console.log(v.id)
+              // })
+              this.tableData = array
+            })
+            .catch(failResponse => {})
         })
         .catch(failResponse => {
           alert('信息格式有误')

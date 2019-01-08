@@ -24,21 +24,14 @@ export default {
           name: this.username
         })
         .then(successResponse => {
+          localStorage.setItem('username', successResponse.data.data.name)
           if (successResponse.data.data.level === 0) {
             this.$router.push({
-              name: 'admin',
-              params: {
-                username: successResponse.data.data.name,
-                level: successResponse.data.data.level
-              }
+              name: 'admin'
             })
           } else {
             this.$router.push({
-              name: 'prophet',
-              params: {
-                username: successResponse.data.data.name,
-                level: successResponse.data.data.level
-              }
+              name: 'prophet'
             })
           }
         })
