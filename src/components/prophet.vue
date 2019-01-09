@@ -1,6 +1,6 @@
 <template>
   <div id="prophet">
-<el-tabs v-model="activeName"  @tab-click="handleClick">
+<el-tabs v-model="activeName"  >
     <el-tab-pane label="Licene" name="first">
       <label class="lable" >产品：</label><el-select v-model="product" placeholder="请选择" v-bind:style="{width: '1000px'}">
       <el-option
@@ -18,8 +18,6 @@
     <label class="lable">发布版本：</label><el-input v-model="edition" placeholder="请输入内容" size="small" v-bind:style="{width: '1000px'}"></el-input><br/>
     <label class="lable">租户数量：</label><el-input v-model="maxTenantCount" placeholder="请输入内容" size="small" v-bind:style="{width: '1000px'}"></el-input><br/>
     <el-button type="primary" round size="small" v-on:click="generate">生成</el-button>
-    <el-button type="primary" round size="small" v-show="bu" v-on:click="download">下载</el-button><br/>
-    <textarea cols="30" rows="10" v-model="responseResult" v-show="ta"></textarea><br/>
     </el-tab-pane>
     <el-tab-pane label="申请中" name="second">
       <el-table
@@ -49,8 +47,21 @@
       </el-table-column>
       <el-table-column
         prop="configuration"
-        label="配置">
+        label="配置"
+        width="200">
       </el-table-column>
+      <el-table-column
+        prop="license"
+        label="License"
+        width="950"
+        v-show="false">
+      </el-table-column>
+      <el-table-column
+      label="操作">
+      <template slot-scope="scope">
+        <el-button @click="download(scope.row)" type="text" size="small">下载</el-button>
+      </template>
+    </el-table-column>
     </el-table>
     </el-tab-pane>
     <el-tab-pane label="申请失败" name="fourth">
@@ -92,7 +103,6 @@ export default {
         label: 'PWS'
       }],
       product: 'prophet',
-      ta: false,
       activeName: 'first'
     }
   },
@@ -158,11 +168,12 @@ export default {
     }
   },
   methods: {
-    download () {
+    download (row) {
+      console.log(row.license)
       var eleLink = document.createElement('a')
       eleLink.download = 'license.txt'
       eleLink.style.display = 'none'
-      var blob = new Blob([this.responseResult])
+      var blob = new Blob([row.license])
       eleLink.href = URL.createObjectURL(blob)
       document.body.appendChild(eleLink)
       eleLink.click()
@@ -183,9 +194,6 @@ export default {
         })
         .then(successResponse => {
           this.$message('申请提交成功')
-          this.bu = true
-          this.ta = true
-          this.responseResult = successResponse.data
           this.$axios
             .get('api/userListRecord?name=' + localStorage.getItem('username'), {
             })
