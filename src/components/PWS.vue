@@ -17,10 +17,68 @@
     <label class="lable">Cores：</label><el-input v-model="MaxCpuCores" placeholder="请输入内容" size="small" v-bind:style="{width: '1000px'}"></el-input><br/>
     <label class="lable">GPU：</label><el-input v-model="MaxGpuUnits" placeholder="请输入内容" size="small" v-bind:style="{width: '1000px'}"></el-input><br/>
     <el-button type="success" round size="small" v-on:click="generate">生成</el-button>
-    <el-button type="primary" round size="small" v-show="bu" v-on:click="download">下载</el-button><br/>
-    <textarea cols="30" rows="10" v-model="responseResult" v-show="ta"></textarea><br/>
     </el-tab-pane>
-    <el-tab-pane label="申请情况" name="second"></el-tab-pane>
+    <el-tab-pane label="申请情况" name="second">
+      <el-table
+      :data="tableData"
+      border
+      style="width: 100%">
+      <el-table-column
+        prop="name"
+        label="姓名"
+        width="200">
+      </el-table-column>
+      <el-table-column
+        prop="configuration"
+        label="配置">
+      </el-table-column>
+    </el-table>
+    </el-tab-pane>
+    <el-tab-pane label="申请成功" name="third">
+      <el-table
+      :data="tableData1"
+      border
+      style="width: 100%">
+      <el-table-column
+        prop="name"
+        label="姓名"
+        width="200">
+      </el-table-column>
+      <el-table-column
+        prop="configuration"
+        label="配置"
+        width="200">
+      </el-table-column>
+      <el-table-column
+        prop="license"
+        label="License"
+        width="950"
+        v-show="false">
+      </el-table-column>
+      <el-table-column
+      label="操作">
+      <template slot-scope="scope">
+        <el-button @click="download(scope.row)" type="text" size="small">下载</el-button>
+      </template>
+    </el-table-column>
+    </el-table>
+    </el-tab-pane>
+    <el-tab-pane label="申请失败" name="fourth">
+      <el-table
+      :data="tableData2"
+      border
+      style="width: 100%">
+      <el-table-column
+        prop="name"
+        label="姓名"
+        width="200">
+      </el-table-column>
+      <el-table-column
+        prop="configuration"
+        label="配置">
+      </el-table-column>
+    </el-table>
+    </el-tab-pane>
   </el-tabs>
 
   </div>
@@ -43,8 +101,6 @@ export default {
         label: 'PWS'
       }],
       product: 'PWS',
-      ta: false,
-      bu: false,
       activeName: 'first'
     }
   },
@@ -53,6 +109,39 @@ export default {
       .get('api/judgeSession', {
       })
       .then(successResponse => {
+        this.$axios
+          .get('api/userListRecord?name=' + localStorage.getItem('username'), {
+          })
+          .then(successResponse => {
+            var array = successResponse.data
+            // array.forEach(v => {
+            //   console.log(v.id)
+            // })
+            this.tableData = array
+          })
+          .catch(failResponse => {})
+        this.$axios
+          .get('api/userListPassRecord?name=' + localStorage.getItem('username'), {
+          })
+          .then(successResponse => {
+            var array = successResponse.data
+            // array.forEach(v => {
+            //   console.log(v.id)
+            // })
+            this.tableData1 = array
+          })
+          .catch(failResponse => {})
+        this.$axios
+          .get('api/userListRefudeRecord?name=' + localStorage.getItem('username'), {
+          })
+          .then(successResponse => {
+            var array = successResponse.data
+            // array.forEach(v => {
+            //   console.log(v.id)
+            // })
+            this.tableData2 = array
+          })
+          .catch(failResponse => {})
       })
       .catch(failResponse => {
         this.$router.push({
@@ -77,11 +166,11 @@ export default {
     }
   },
   methods: {
-    download () {
+    download (row) {
       var eleLink = document.createElement('a')
       eleLink.download = 'license.txt'
       eleLink.style.display = 'none'
-      var blob = new Blob([this.responseResult])
+      var blob = new Blob([row.license])
       eleLink.href = URL.createObjectURL(blob)
       document.body.appendChild(eleLink)
       eleLink.click()
@@ -100,9 +189,18 @@ export default {
           MaxGpuUnits: this.MaxGpuUnits
         })
         .then(successResponse => {
-          this.bu = true
-          this.ta = true
-          this.responseResult = successResponse.data
+          this.$message('申请提交成功')
+          this.$axios
+            .get('api/userListRecord?name=' + localStorage.getItem('username'), {
+            })
+            .then(successResponse => {
+              var array = successResponse.data
+              // array.forEach(v => {
+              //   console.log(v.id)
+              // })
+              this.tableData = array
+            })
+            .catch(failResponse => {})
         })
         .catch(failResponse => {
           alert('信息格式有误')
