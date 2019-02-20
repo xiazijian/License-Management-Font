@@ -30,6 +30,7 @@
     </el-pagination>
   </div>
     </el-tab-pane>
+
     <el-tab-pane label="已通过" name="second">
       <el-table
     :data="tableData1"
@@ -51,7 +52,12 @@
       label="License">
     </el-table-column>
   </el-table>
+  <div class="block">
+    <el-pagination @size-change="handleSizeChange1" @current-change="handleCurrentChange1" :current-page="currentPage1" :page-sizes="[1,2,50, 100]" :page-size="pagesize1" layout="total, sizes, prev, pager, next, jumper" :total="licenseCount1">
+    </el-pagination>
+  </div>
     </el-tab-pane>
+
     <el-tab-pane label="未通过" name="third">
       <el-table
     :data="tableData2"
@@ -83,7 +89,11 @@ export default {
       tableData: [],
       licenseCount: 0,
       currentPage: 1,
-      pagesize: 1
+      pagesize: 1,
+      tableData1: [],
+      licenseCount1: 0,
+      currentPage1: 1,
+      pagesize1: 1
     }
   },
   methods: {
@@ -115,6 +125,37 @@ export default {
           //   console.log(v.id)
           // })
           this.tableData = array
+        })
+        .catch(failResponse => {})
+    },
+    handleSizeChange1 (val) {
+      this.currentPage1 = 1
+      console.log(`每页 ${val} 条` + `当前页 ${this.currentPage1}`)
+      this.pagesize1 = val
+      this.$axios
+        .get('api/listAllPassRecordLimit?start=' + this.currentPage1 + '&' + 'limit=' + val, {
+        })
+        .then(successResponse => {
+          var array = successResponse.data
+          // array.forEach(v => {
+          //   console.log(v.id)
+          // })
+          this.tableData1 = array
+        })
+        .catch(failResponse => {})
+    },
+    handleCurrentChange1 (val) {
+      this.currentPage1 = val
+      console.log(`当前页: ${val}` + `+${this.currentPage1}`)
+      this.$axios
+        .get('api/listAllPassRecordLimit?start=' + val + '&' + 'limit=' + this.pagesize1, {
+        })
+        .then(successResponse => {
+          var array = successResponse.data
+          // array.forEach(v => {
+          //   console.log(v.id)
+          // })
+          this.tableData1 = array
         })
         .catch(failResponse => {})
     },
@@ -185,7 +226,14 @@ export default {
           })
           .catch(failResponse => {})
         this.$axios
-          .get('api/listAllPassRecord', {
+          .get('api/LicensePassRecordCount', {
+          })
+          .then(successResponse => {
+            this.licenseCount1 = successResponse.data
+          })
+          .catch(failResponse => {})
+        this.$axios
+          .get('api/listAllPassRecordLimit?start=' + this.currentPage1 + '&' + 'limit=' + this.pagesize1, {
           })
           .then(successResponse => {
             var array = successResponse.data
