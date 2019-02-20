@@ -25,6 +25,10 @@
       </template>
     </el-table-column>
   </el-table>
+  <div class="block">
+    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[1,2,50, 100]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="licenseCount">
+    </el-pagination>
+  </div>
     </el-tab-pane>
     <el-tab-pane label="已通过" name="second">
       <el-table
@@ -76,10 +80,44 @@ export default {
   data () {
     return {
       activeName: 'first',
-      tableData: []
+      tableData: [],
+      licenseCount: 0,
+      currentPage: 1,
+      pagesize: 1
     }
   },
   methods: {
+    handleSizeChange (val) {
+      this.currentPage = 1
+      console.log(`每页 ${val} 条` + `当前页 ${this.currentPage}`)
+      this.pagesize = val
+      this.$axios
+        .get('api/getLimitList?start=' + this.currentPage + '&' + 'limit=' + val, {
+        })
+        .then(successResponse => {
+          var array = successResponse.data
+          // array.forEach(v => {
+          //   console.log(v.id)
+          // })
+          this.tableData = array
+        })
+        .catch(failResponse => {})
+    },
+    handleCurrentChange (val) {
+      this.currentPage = val
+      console.log(`当前页: ${val}` + `+${this.currentPage}`)
+      this.$axios
+        .get('api/getLimitList?start=' + val + '&' + 'limit=' + this.pagesize, {
+        })
+        .then(successResponse => {
+          var array = successResponse.data
+          // array.forEach(v => {
+          //   console.log(v.id)
+          // })
+          this.tableData = array
+        })
+        .catch(failResponse => {})
+    },
     pass (row) {
       console.log(row.id)
       this.$axios
@@ -129,7 +167,14 @@ export default {
       })
       .then(successResponse => {
         this.$axios
-          .get('api/listRecord', {
+          .get('api/LicenseRecordCount', {
+          })
+          .then(successResponse => {
+            this.licenseCount = successResponse.data
+          })
+          .catch(failResponse => {})
+        this.$axios
+          .get('api/getLimitList?start=' + this.currentPage + '&' + 'limit=' + this.pagesize, {
           })
           .then(successResponse => {
             var array = successResponse.data
