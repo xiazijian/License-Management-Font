@@ -172,7 +172,7 @@ export default {
       console.log(`每页 ${val} 条` + `当前页 ${this.currentPage2}`)
       this.pagesize2 = val
       this.$axios
-        .get('api/listAllPassRecordLimit?start=' + this.currentPage2 + '&' + 'limit=' + val, {
+        .get('api/listAllRefuseLimitRecord?start=' + this.currentPage2 + '&' + 'limit=' + val, {
         })
         .then(successResponse => {
           var array = successResponse.data
@@ -187,7 +187,7 @@ export default {
       this.currentPage2 = val
       console.log(`当前页: ${val}` + `+${this.currentPage2}`)
       this.$axios
-        .get('api/listAllPassRecordLimit?start=' + val + '&' + 'limit=' + this.pagesize2, {
+        .get('api/listAllRefuseLimitRecord?start=' + val + '&' + 'limit=' + this.pagesize2, {
         })
         .then(successResponse => {
           var array = successResponse.data
